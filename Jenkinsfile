@@ -1,10 +1,14 @@
 pipeline {
+    
     agent { label 'jenkins_agent' }
     tools {
+        
         jdk 'jdk-21'
         maven 'Maven3'
     }
-stages{
+    
+stages {
+    
         stage("Cleanup Workspace"){
                 steps {
                 cleanWs()
@@ -30,13 +34,14 @@ stages{
            }
        }
 
-        statge("SonarQube Analysis"){
+        statge ("SonarQube Analysis") {
             steps {
                  scripts {
                         withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
                         sh "mvn sonar:sonar"
                         }
                      }
-                  }
-               }
-            }
+                   }
+                 }
+              }
+           } 
