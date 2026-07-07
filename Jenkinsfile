@@ -68,7 +68,7 @@ pipeline {
                         // Add sudo to the build and push commands by customizing the execution
                 sh "sudo docker build -t ${image_name}:${image_tag} ."
                 sh "sudo docker push ${image_name}:${image_tag}"
-                sh "sudo docker push ${image_name}:latest"
+              //  sh "sudo docker push ${image_name}:latest"
                     } 
                 } 
             } 
