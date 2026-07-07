@@ -9,7 +9,7 @@ pipeline {
     environment { 
         app_name = "register-application-pipeline" 
         release = "1.0.0" 
-        docker_user = "prabhu9683" 
+        docker_user = "prabhuv2214" 
         // Best Practice: Use credentials helper instead of hardcoded strings
         docker_credentials_id = 'dockerhub-token' 
         image_name = "${docker_user}/${app_name}" 
