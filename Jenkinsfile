@@ -65,9 +65,10 @@ pipeline {
                 script { 
                     // Uses registry credentials cleanly via Jenkins Credentials ID
                     docker.withRegistry('', docker_credentials_id) { 
-                        def docker_image = docker.build("${image_name}:${image_tag}") 
-                        docker_image.push() 
-                        docker_image.push('latest') 
+                        // Add sudo to the build and push commands by customizing the execution
+                sh "sudo docker build -t ${image_name}:${image_tag} ."
+                sh "sudo docker push ${image_name}:${image_tag}"
+                sh "sudo docker push ${image_name}:latest"
                     } 
                 } 
             } 
