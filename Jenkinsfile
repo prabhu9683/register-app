@@ -1,77 +1,70 @@
-pipeline {
-    agent { label 'jenkins_agent' }
-    
-    tools {
-        jdk 'jdk-21'
-        maven 'Maven3'
+pipeline { 
+    agent { 
+        label 'jenkins_agent' 
+    } 
+    tools { 
+        jdk 'jdk-21' 
+        maven 'maven3' 
+    } 
+    environment { 
+        app_name = "register-application-pipeline" 
+        release = "1.0.0" 
+        docker_user = "prabhu9683" 
+        // Best Practice: Use credentials helper instead of hardcoded strings
+        docker_credentials_id = 'dockerhub' 
+        image_name = "${docker_user}/${app_name}" 
+        image_tag = "${release}-${BUILD_NUMBER}" 
+        jenkins_api_token = credentials("jenkins_api_token") 
+    } 
+    stages { 
+        stage("checkout from scm") { 
+            steps { 
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/prabhu9683/register-app' 
+            } 
+        } 
+        stage("build application") { 
+            steps { 
+                sh "mvn clean package" 
+            } 
+        } 
+        stage("test application") { 
+            steps { 
+                sh "mvn test" 
+            } 
+        } 
+        stage("sonarqube analysis") { 
+            steps { 
+                script { 
+                    withSonarQubeEnv(installationName: 'sonarqube-server', credentialsId: 'jenkins-sonarqube-token') { 
+                        sh 'mvn sonar:sonar' 
+                    } 
+                } 
+            } 
+        } 
+        stage("quality gate") { 
+            steps { 
+                script { 
+                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token' 
+                } 
+            } 
+        } 
+        stage("build & push docker image") { 
+            steps { 
+                script { 
+                    // Uses registry credentials cleanly via Jenkins Credentials ID
+                    docker.withRegistry('', docker_credentials_id) { 
+                        def docker_image = docker.build("${image_name}:${image_tag}") 
+                        docker_image.push() 
+                        docker_image.push('latest') 
+                    } 
+                } 
+            } 
+        } 
     }
-    environment {
-	    APP_NAME = "register-application-pipeline"
-            RELEASE = "1.0.0"
-            DOCKER_USER = "prabhu9683"
-            DOCKER_PASS = 'dockerhub'
-            IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
-            IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
-	    JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
-    }    
-    stages {
-        stage("Checkout from SCM") {
-            steps {
-                git branch: 'main', credentialsId: 'github', url: 'https://github.com/prabhu9683/register-app'
-            }
-        }
-
-        stage("Build Application") {
-            steps {
-                sh "mvn clean package"
-            }
-        }
-
-        stage("Test Application") {
-            steps {
-                sh "mvn test"
-            }
-        }
-
-        stage("SonarQube Analysis") {
-            steps {
-                script {
-                    withSonarQubeEnv(installationName: 'sonarqube-server', credentialsId: 'jenkins-sonarqube-token') {
-                        sh 'mvn sonar:sonar'
-                    }
-                }
-            }
-        }
-
-         stage("Quality Gate") {
-               steps {
-                   script {
-                        waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
-                          }
-                      }
-                   }
-
-          stage("Build & Push Docker Image") {
-            steps {
-                script {
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image = docker.build "${IMAGE_NAME}"
-                    }
-
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
-                    }
-                 }
-              }
-          }    
-/*
-    // Wipes the workspace safely ONLY after the entire pipeline finishes
     post {
         always {
+            // Wipes the workspace safely only after the entire pipeline finishes
             cleanWs()
         }
     }
-*/ 
-  }
 }
