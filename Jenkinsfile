@@ -87,16 +87,17 @@ pipeline {
            }
        }
 	 */  
-		stage ('Cleanup Artifacts') {
-           steps {
-               script {
-                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker rmi ${IMAGE_NAME}:latest"
-
-               }
-          }
-       }
+		stage('Cleanup Artifacts') {
+    steps {
+        script {
+            sh """
+            sudo docker rmi ${IMAGE_NAME}:${IMAGE_TAG} || true
+            sudo docker rmi ${IMAGE_NAME}:latest || true
+            """
+        }
+    }
    }
+  }
 }
 	
    
