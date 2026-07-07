@@ -34,7 +34,7 @@ stages {
            }
        }
 
-        statge ("SonarQube Analysis") {
+        stage ("SonarQube Analysis") {
             steps {
                  scripts {
                         withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
