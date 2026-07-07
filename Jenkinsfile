@@ -35,7 +35,6 @@ pipeline {
             }
         }
     }
-}
     /*
 // Wipes the workspace safely ONLY after the entire pipeline finishes
     post {
