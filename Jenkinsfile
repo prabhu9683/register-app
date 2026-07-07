@@ -37,7 +37,7 @@ stages {
         stage ("SonarQube Analysis") {
             steps {
                  script {
-                        withSonarQubeEnv(installationName: 'SonarQube-Server', credentialsId: 'jenkins-sonarqube-token') {
+                        withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
                                        sh 'mvn sonar:sonar'
     // Your analysis commands here, e.g., sh 'mvn sonar:sonar' or sh 'sonar-scanner'
                                     }
