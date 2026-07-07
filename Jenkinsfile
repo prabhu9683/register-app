@@ -65,11 +65,14 @@ pipeline {
                 script { 
                     // Uses registry credentials cleanly via Jenkins Credentials ID
                     docker.withRegistry('', docker_credentials_id) { 
-                sh """
-                docker build -t ${image_name}:${image_tag} .
-                docker tag ${image_name}:${image_tag} ${image_name}:latest
-                docker push ${image_name}:${image_tag}
-                docker push ${image_name}:latest
+               sh """
+                sudo docker build -t ${image_name}:${image_tag} .
+
+                sudo docker tag ${image_name}:${image_tag} ${image_name}:latest
+
+                sudo docker push ${image_name}:${image_tag}
+
+                sudo docker push ${image_name}:latest
                 """
                     } 
                 } 
