@@ -18,28 +18,30 @@ pipeline {
     } 
     stages {
         stage ("Cleanup Workspace") {
-           step {
+           steps {
             // Wipes the workspace safely only after the entire pipeline finishes
             cleanWs()
            }
         }
     
-    stages { 
         stage("checkout from scm") { 
             steps { 
                 git branch: 'main', credentialsId: 'github', url: 'https://github.com/prabhu9683/register-app' 
             } 
         } 
+        
         stage("build application") { 
             steps { 
                 sh "mvn clean package" 
             } 
         } 
+        
         stage("test application") { 
             steps { 
                 sh "mvn test" 
             } 
-        } 
+        }
+        
         stage("sonarqube analysis") { 
             steps { 
                 script { 
@@ -49,13 +51,15 @@ pipeline {
                 } 
             } 
         } 
+        
         stage("quality gate") { 
             steps { 
                 script { 
                     waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token' 
                 } 
             } 
-        } 
+        }
+        
         stage("build & push docker image") { 
             steps { 
                 script { 
@@ -68,7 +72,6 @@ pipeline {
                 } 
             } 
         } 
-     }
-  }
+    }
 }
     
