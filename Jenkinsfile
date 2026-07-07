@@ -34,7 +34,16 @@ pipeline {
                 }
             }
         }
-    }
+
+         stage(Quality Gate") {
+               steps {
+                   script {
+                        waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+                          }
+                      }
+                   }
+               }
+    
 /*
     // Wipes the workspace safely ONLY after the entire pipeline finishes
     post {
