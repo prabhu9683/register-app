@@ -4,7 +4,7 @@ pipeline {
     } 
     tools { 
         jdk 'jdk-21' 
-        maven 'maven3' 
+        maven 'Maven3' 
     } 
     environment { 
         app_name = "register-application-pipeline" 
