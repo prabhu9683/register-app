@@ -5,6 +5,8 @@ pipeline {
         jdk 'jdk-21'
         maven 'Maven3'
     }
+    envirnment {
+        
     
     stages {
         stage("Checkout from SCM") {
