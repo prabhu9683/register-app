@@ -16,6 +16,14 @@ pipeline {
         image_tag = "${release}-${BUILD_NUMBER}" 
         jenkins_api_token = credentials("jenkins_api_token") 
     } 
+    stages {
+        stage ("Cleanup Workspace") {
+           step {
+            // Wipes the workspace safely only after the entire pipeline finishes
+            cleanWs()
+           }
+        }
+    
     stages { 
         stage("checkout from scm") { 
             steps { 
@@ -60,11 +68,5 @@ pipeline {
                 } 
             } 
         } 
-    }
-    post {
-        always {
-            // Wipes the workspace safely only after the entire pipeline finishes
-            cleanWs()
-        }
     }
 }
