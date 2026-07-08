@@ -103,9 +103,7 @@ stage("Trigger CD Pipeline") {
                     sh "curl -v -k --user devops:${jenkins-api-token} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'a7326cc148cf34bc08a4cf841c34e7a1-2109665660.ap-south-1.elb.amazonaws.com:8080/job/gitops-register-app-cd/buildWithParameters?token=github-token'"
                 }
             }
-       }
-    }
-
+        }
     post {
        failure {
              emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
@@ -120,7 +118,6 @@ stage("Trigger CD Pipeline") {
      }
    }		
   }
-}
 	
    
     
