@@ -91,8 +91,8 @@ pipeline {
     steps {
         script {
             sh """
-            sudo docker rmi ${IMAGE_NAME}:${IMAGE_TAG} || true
-            sudo docker rmi ${IMAGE_NAME}:latest || true
+            sudo docker rmi ${image_name}:${image_tag} || true
+            sudo docker rmi ${image_name}:latest || true
             """
         }
     }
