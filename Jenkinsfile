@@ -106,11 +106,8 @@ stage("Trigger CD Pipeline") {
         }
 	}	
     
-	post {
-		always {
-			cleanWs()
-		}
-       failure {
+	post {       
+	  failure {
              emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
                       subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed", 
                       mimeType: 'text/html',to: "prabhu9683@gmail.com"
