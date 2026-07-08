@@ -104,7 +104,9 @@ stage("Trigger CD Pipeline") {
                 }
             }
         }
-    post {
+	}	
+    
+	post {
        failure {
              emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
                       subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed", 
@@ -114,9 +116,9 @@ stage("Trigger CD Pipeline") {
             emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
                      subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful", 
                      mimeType: 'text/html',to: "ashfaque.s510@gmail.com"
-       }      
-     }
-   }		
+           }      
+        }
+     }		
   }
 	
    
