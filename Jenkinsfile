@@ -107,6 +107,9 @@ stage("Trigger CD Pipeline") {
 	}	
     
 	post {
+		always {
+			cleanWs()
+		}
        failure {
              emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
                       subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed", 
@@ -119,7 +122,6 @@ stage("Trigger CD Pipeline") {
            }      
         }
      }		
-  }
 	
    
     
